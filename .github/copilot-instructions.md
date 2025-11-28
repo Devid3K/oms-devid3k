@@ -16,6 +16,10 @@
 - **UI Library**: Naive UI components exclusively
 - **TypeScript**: Use TypeScript for type safety
 - **State Management**: Pinia stores (already configured)
+- **Theme**: Light mode only and color main=#F9F8F6 sub1=#EFE9E3 sub2=#D9CFC7 sub3=#C9B59C
+- **Routing**: Vue Router (already configured)
+- **API**: Use axios for API calls (already configured)
+
 
 ### 2. Code Style Preferences
 - Use Vue 3 Composition API (`<script setup>`)
@@ -25,13 +29,14 @@
 - Use kebab-case for component file names
 
 ### 3. Component Structure
+- **Where components go**: `page/${pageNameFolder}/components/...`
 ```vue
 <template>
   <!-- Use Naive UI components with Tailwind classes -->
   <div class="p-4 bg-gray-50">
-    <n-card>
+    <NCard>
       <!-- Content here -->
-    </n-card>
+    </NCard>
   </div>
 </template>
 
@@ -115,11 +120,69 @@ src/
 - Use Pinia stores for global state
 - Create separate stores for different domains (orders, dashboard, etc.)
 - Use composables for reusable logic
+- **API calls must be in store actions, not in components**
+- Store structure follows Options API pattern (state, actions)
+- Components should only call store actions and use store state
+
+#### Store Structure Example:
+```typescript
+export const useOrderStore = defineStore("orderStore", {
+  state: () => ({
+    orders: [] as Order[],
+    order: {} as Order,
+    loading: false
+  }),
+  actions: {
+    async getOrders(params: any) {
+      try {
+        this.loading = true
+        const resp = await ApiService.v1.Order.getOrders(params)
+        this.orders = resp.data
+        return resp
+      } catch (error) {
+        console.error(error)
+      } finally {
+        this.loading = false
+      }
+    }
+  }
+})
+```
 
 ### 8. API Integration
 - Use the existing `apiService.ts` pattern
 - Create typed interfaces for API responses
 - Handle loading states and error handling consistently
+- **Store Pattern**: Function calls to API should be done in Pinia stores, not in components
+- **Data Flow**: Components call store actions → Store calls API → Store updates state → Components use store data
+
+#### API Call Pattern (Follow useCandidateBAStore.ts example):
+```typescript
+// In Store (actions)
+async getCandidates(params: any) {
+  try {
+    const resp = await ApiService.v1.Candidate.getCandidates(params)
+    this.candidates = resp.data  // Store data in state
+    return resp
+  } catch (error: any) {
+    console.error(error.message_th)
+  }
+}
+
+// In Component - CORRECT pattern
+const candidateStore = useCandidateBAStore()
+
+// Call store action
+await candidateStore.getCandidates(params)
+
+// Use data from store
+const candidates = candidateStore.candidates
+const candidate = candidateStore.candidate
+
+// DO NOT call API directly in component
+// ❌ BAD: const data = await ApiService.v1.Something()
+// ✅ GOOD: await someStore.fetchSomething()
+```
 
 ### 9. Routing
 - Use Vue Router for navigation
@@ -154,6 +217,8 @@ src/
 - Other UI libraries besides Naive UI
 - jQuery or other DOM manipulation libraries
 - Class-based Vue components (use Composition API)
+- API calls directly in components (use store actions instead)
+- Composition API in stores (use Options API pattern like useCandidateBAStore)
 
 ## Always include:
 - TypeScript types for all data structures
