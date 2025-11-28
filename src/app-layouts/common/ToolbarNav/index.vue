@@ -1,0 +1,142 @@
+<template>
+	<header class="toolbar" :class="{ boxed }">
+		<div class="wrap flex items-center justify-end gap-3">
+			<div class="icon-nav flex flex-row items-center gap-2">
+				<Icon
+					:size="30"
+					:name="BURGER_ICON"
+					class="cursor-pointer mr-2"
+					@click="openNav()"
+					color="#000000"
+				></Icon>
+				<Logo mini class="cursor-pointer" />
+			</div>
+
+			<div class="bubble flex items-center">
+				<Avatar />
+			</div>
+		</div>
+	</header>
+</template>
+
+<script lang="ts" setup>
+import { onMounted, toRefs } from "vue"
+import Logo from "../Logo.vue"
+import Breadcrumb from "./Breadcrumb.vue"
+import Avatar from "./Avatar.vue"
+import ThemeSwitch from "./ThemeSwitch.vue"
+import Notifications from "./Notifications.vue"
+import LocaleSwitch from "./LocaleSwitch.vue"
+import FullscreenSwitch from "./FullscreenSwitch.vue"
+import { useLoadingBar } from "naive-ui"
+import { useRouter } from "vue-router"
+import Icon from "@/components/common/Icon.vue"
+// import { useMainStore } from "@/stores/main"
+import { useThemeStore } from "@/stores/theme"
+
+const router = useRouter()
+
+defineOptions({
+	name: "Toolbar"
+})
+
+const props = defineProps<{
+	boxed: boolean
+}>()
+const { boxed } = toRefs(props)
+const BURGER_ICON = "iconamoon:menu-burger-horizontal-bold"
+const themeStore = useThemeStore()
+// const mainStore = useMainStore()
+
+function openNav() {
+	themeStore.openSidebar()
+}
+
+onMounted(() => {
+	const loadingBar = useLoadingBar()
+	router.beforeEach(() => loadingBar?.start())
+	router.afterEach(() => loadingBar?.finish())
+	// mainStore.setLoadingBar(loadingBar)
+})
+</script>
+
+<style lang="scss" scoped>
+.toolbar {
+	@media (max-width: 700px) {
+		height: var(--toolbar-height);
+	}
+	position: sticky;
+	top: 0;
+	left: 0;
+	backdrop-filter: blur(15px);
+
+	// width: calc(100% - 1px);
+	width: 100%;
+	max-width: 100%;
+	padding: 0 var(--view-padding);
+	z-index: 3;
+	//box-shadow: 0px 20px 20px 0px var(--bg-body);
+	overflow: hidden;
+
+	&::before {
+		content: "";
+		width: 100%;
+		height: 100%;
+		background-color: var(--bg-body);
+		background: linear-gradient(var(--bg-body), rgba(255, 255, 255, 0) 100%);
+		position: absolute;
+		display: block;
+		top: 0;
+		left: 0;
+		z-index: -1;
+	}
+
+	.wrap {
+		overflow: hidden;
+		width: 100%;
+		max-width: 100%;
+
+		.bubble {
+			transition: all 0.3s;
+			gap: 14px;
+		}
+
+		@media (max-width: 1400px) {
+			.pinned-pages {
+				display: none;
+			}
+		}
+		@media (min-width: 700px) {
+			.bubble {
+				display: none;
+			}
+			.icon-nav {
+				display: none;
+			}
+		}
+		@media (max-width: 700px) {
+			height: var(--toolbar-height);
+			justify-content: space-between;
+			.breadcrumb {
+				display: none;
+			}
+		}
+	}
+
+	&.boxed {
+		padding: 0;
+		.wrap {
+			padding: 0 var(--view-padding);
+			max-width: var(--boxed-width);
+			margin: 0 auto;
+		}
+	}
+
+	&.gradient-bg-sidebar {
+		&::before {
+			background-color: var(--bg-sidebar);
+			background: linear-gradient(var(--bg-sidebar), rgba(255, 255, 255, 0) 100%);
+		}
+	}
+}
+</style>

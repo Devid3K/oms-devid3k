@@ -1,0 +1,116 @@
+.n-modal-mask {
+	backdrop-filter: blur(3px);
+}
+.n-modal,
+.n-card.n-modal[role] {
+	// background-color: rgba(var(--modal-color-rgb), 0.7);
+	backdrop-filter: blur(20px);
+	max-width: 90%;
+	margin: 10vh auto;
+}
+
+.n-image-preview-overlay {
+	backdrop-filter: blur(3px);
+}
+.n-image-preview-toolbar {
+	box-sizing: content-box;
+
+	* {
+		box-sizing: content-box;
+	}
+}
+.n-slider {
+	box-sizing: content-box;
+}
+.n-calendar * {
+	box-sizing: content-box;
+}
+.n-badge {
+	.n-badge-sup {
+		top: inherit;
+	}
+}
+.n-dropdown-menu {
+	&.n-dropdown-menu--scrollable {
+		max-height: 60vh;
+	}
+}
+.n-card {
+	& > .n-card-header {
+		div.n-card-header__main {
+			//font-family: var(--font-family-display);
+			font-weight: 700;
+		}
+	}
+	& > .n-card__content {
+		max-height: 100%;
+	}
+}
+.n-avatar .n-avatar__text {
+	transform: translateX(-50%) translateY(-50%) scale(1);
+}
+
+// popover max-width
+.v-binder-follower-content {
+	max-width: calc(100vw - (var(--view-padding) * 2));
+}
+
+//Pagination
+.n-pagination .n-pagination-item:not(.n-pagination-item--disabled) {
+    border-radius: 100%;
+}
+
+.n-pagination .n-pagination-item:not(.n-pagination-item--disabled):hover {
+    border-radius: 100%;
+}
+
+.n-pagination .n-pagination-item:not(.n-pagination-item--disabled):focus,
+.n-pagination .n-pagination-item:not(.n-pagination-item--disabled):active {
+    border-radius: 100%;
+}
+
+.n-pagination .n-pagination-item:not(.n-pagination-item--disabled).n-pagination-item--active {
+    border-radius: 100%;
+}
+
+
+//Select in pagination
+// .n-base-selection .n-base-selection-label {
+//     background: transparent !important;
+//     color: blue !important;
+// }
+
+// .n-base-selection__border {
+//     border-color: transparent !important;
+//     border: 0 !important;
+// }
+
+// .n-base-selection .n-base-selection-label .n-base-selection-input .n-base-selection-input__content {
+//     color: blue !important;
+//     border-color: transparent !important;
+//     border: 0 !important;
+// }
+
+// .n-base-selection .n-base-selection__state-border {
+//     box-shadow: none !important;
+//     border-color: transparent !important;
+//     border: 0 !important;
+// }
+
+// .n-base-selection .n-base-suffix .n-base-suffix__arrow {
+//     color: blue;
+// }
+
+// .n-base-selection-label {
+//     color: blue !important;
+//     font-weight: 600 !important;
+// }
+
+// .n-base-loading {
+//     width: 0em;
+// }
+
+//Modal
+.n-dialog.n-dialog--icon-left .n-dialog__icon {
+    display: none;
+}
